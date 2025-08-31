@@ -12,10 +12,17 @@
     "@anthropic-ai/sdk": "^0.60.0",
     "@clerk/nextjs": "^6.31.6",
     "@supabase/supabase-js": "^2.56.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
+    "mammoth": "^1.10.0",
     "next": "15.5.2",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^5.4.54",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-dropzone": "^14.3.8"
+    "react-dropzone": "^14.3.8",
+    "recharts": "^3.1.2",
+    "svix": "^1.75.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
