@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Fetch supplier data
-    const { data: suppliers, error: suppliersError } = await (supabaseAdmin as any)
+    const { data: suppliers, error: suppliersError } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch procurement data for these suppliers
-    const { data: procurementData, error: procurementError } = await (supabaseAdmin as any)
+    const { data: procurementData, error: procurementError } = await (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)

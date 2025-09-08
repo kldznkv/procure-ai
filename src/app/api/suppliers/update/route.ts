@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase-admin';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if admin client is available
-    if (!supabaseAdmin) {
+    if (!getSupabaseAdmin()) {
       return NextResponse.json(
         { error: 'Supabase admin client not configured' },
         { status: 500 }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 API: Updating supplier:', supplierId, 'with data:', updateData);
 
     // Update supplier with document information
-    const { error: updateError } = await (supabaseAdmin as any)
+    const { error: updateError } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .update({
         ...updateData,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if user already exists
-    const { data: existingUser, error: checkError } = await (supabaseAdmin as any)
+    const { data: existingUser, error: checkError } = await (getSupabaseAdmin() as any)
       .from('users')
       .select('id')
       .eq('clerk_user_id', clerk_user_id)
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user record in Supabase
-    const { data: newUser, error: insertError } = await (supabaseAdmin as any)
+    const { data: newUser, error: insertError } = await (getSupabaseAdmin() as any)
       .from('users')
       .insert([{
         clerk_user_id,

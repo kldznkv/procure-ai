@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Build query for procurement documents
-    let query = (supabaseAdmin as any)
+    let query = (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)

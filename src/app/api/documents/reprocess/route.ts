@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Reprocessing - Starting reprocess for document:', document_id);
 
     // Get the document
-    const { data: document, error: fetchError } = await (supabaseAdmin as any)
+    const { data: document, error: fetchError } = await (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .select('*')
       .eq('id', document_id)

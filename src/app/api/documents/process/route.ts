@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
 import { handleDatabaseConstraintError, getDefaultDocumentStatus, validateDocumentData } from '../../../../lib/database-constraints';
 import { findOrCreateSupplier, extractSupplierDataFromDocument } from '../../../../lib/supplier-manager';
 import { aiCache } from '../../../../lib/ai-cache';
@@ -286,7 +286,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Update the document with extracted data
-      const { error: updateError } = await (supabaseAdmin as any)
+      const { error: updateError } = await (getSupabaseAdmin() as any)
         .from('procurement_documents')
         .update({
           extracted_text: document_text,
@@ -337,7 +337,7 @@ export async function POST(request: NextRequest) {
       
       // For test document IDs, don't update database on error
       if (!document_id.startsWith('test')) {
-        await (supabaseAdmin as any)
+        await (getSupabaseAdmin() as any)
           .from('procurement_documents')
           .update({
             extracted_text: document_text,

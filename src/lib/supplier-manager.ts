@@ -1,4 +1,4 @@
-import { supabaseAdmin, isAdminClientConfigured } from './supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from './supabase-admin';
 
 export interface SupplierData {
   id?: string;
@@ -47,7 +47,7 @@ export async function findOrCreateSupplier(
     console.log('🔍 Supplier Manager - Looking up supplier:', supplierName);
 
     // First, try to find existing supplier by name (case-insensitive)
-    const { data: existingSuppliers, error: lookupError } = await supabaseAdmin!
+    const { data: existingSuppliers, error: lookupError } = await getSupabaseAdmin()!
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -96,7 +96,7 @@ export async function findOrCreateSupplier(
       notes: additionalData?.notes || `Auto-created from document processing on ${new Date().toISOString()}`
     };
 
-    const { data: newSupplier, error: createError } = await supabaseAdmin!
+    const { data: newSupplier, error: createError } = await getSupabaseAdmin()!
       .from('suppliers')
       .insert([{
         user_id: userId,
@@ -151,7 +151,7 @@ export async function findOrCreateSupplier(
  */
 async function updateSupplierTotalSpend(supplierId: string, newTotalSpend: number): Promise<void> {
   try {
-    const { error } = await supabaseAdmin!
+    const { error } = await getSupabaseAdmin()!
       .from('suppliers')
       .update({ 
         total_spend: newTotalSpend,
@@ -188,7 +188,7 @@ export async function findSuppliersByName(
       return [];
     }
 
-    const { data: suppliers, error } = await supabaseAdmin!
+    const { data: suppliers, error } = await getSupabaseAdmin()!
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -217,7 +217,7 @@ export async function getSupplierById(supplierId: string): Promise<SupplierData 
       throw new Error('Supabase admin client not configured');
     }
 
-    const { data: supplier, error } = await supabaseAdmin!
+    const { data: supplier, error } = await getSupabaseAdmin()!
       .from('suppliers')
       .select('*')
       .eq('id', supplierId)

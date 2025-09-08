@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../lib/supabase-admin';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Insert document with extracted data if provided
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .insert([{
         user_id,
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
 
     console.log('🔍 Documents API - Fetching documents for user:', userId, 'supplier_id:', supplierId);
 
-    let query = supabaseAdmin
+    let query = getSupabaseAdmin()
       .from('procurement_documents')
       .select('id, filename, file_path, document_type, processed, created_at, extracted_text, ai_analysis, supplier_id, supplier_name, amount, currency, issue_date, status')
       .eq('user_id', userId);
@@ -163,7 +163,7 @@ export async function PUT(request: NextRequest) {
     if (ai_analysis !== undefined) updateData.ai_analysis = ai_analysis;
     if (processed !== undefined) updateData.processed = processed;
 
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .update(updateData)
       .eq('id', id)
@@ -213,7 +213,7 @@ export async function DELETE(request: NextRequest) {
 
     console.log('🔍 Documents API - Deleting document:', id);
 
-    const { error } = await (supabaseAdmin as any)
+    const { error } = await (getSupabaseAdmin() as any)
       .from('documents')
       .delete()
       .eq('id', id);

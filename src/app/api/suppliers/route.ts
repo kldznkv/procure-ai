@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole, {
-  auth: { autoRefreshToken: false, persistSession: false }
-});
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../lib/supabase-admin';
 
 // GET /api/suppliers - List all suppliers for user
 export async function GET(request: NextRequest) {
@@ -21,7 +14,7 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -65,7 +58,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .insert([{
         user_id,

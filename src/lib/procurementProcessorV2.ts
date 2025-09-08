@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { getSupabase } from './supabase';
 import { getAIService } from './ai/ai-service';
 import { ChatMessage } from './ai/ai-service';
 import { 
@@ -602,7 +602,7 @@ export async function uploadProcurementDocumentV2(
     }
     
     // Store document in database
-    const { data: document, error } = await supabase
+    const { data: document, error } = await getSupabase()
       .from('procurement_documents')
       .insert({
         user_id: userId,
@@ -709,7 +709,7 @@ export async function storeProcurementData(
   userId: string
 ): Promise<void> {
   try {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('procurement_documents')
       .update({
         extracted_data: extractedData,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
+import { getSupabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase-admin';
 
 export async function PUT(
   request: NextRequest,
@@ -32,7 +32,7 @@ export async function PUT(
     if (ai_analysis !== undefined) updateData.ai_analysis = ai_analysis;
     if (processed !== undefined) updateData.processed = processed;
 
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .update(updateData)
       .eq('id', documentId)
@@ -69,7 +69,7 @@ export async function GET(
 
     console.log('🔍 Documents API - Fetching document:', documentId);
 
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('procurement_documents')
       .select('*')
       .eq('id', documentId)

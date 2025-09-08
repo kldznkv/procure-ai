@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole, {
-  auth: { autoRefreshToken: false, persistSession: false }
-});
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 // GET /api/suppliers/[id] - Get supplier details
 export async function GET(
@@ -15,7 +8,7 @@ export async function GET(
 ) {
   const { id } = await params;
   try {
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .select('*')
       .eq('id', id)
@@ -49,7 +42,7 @@ export async function PUT(
       }, { status: 400 });
     }
 
-    const { data, error } = await (supabaseAdmin as any)
+    const { data, error } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .update({
         name,
@@ -85,7 +78,7 @@ export async function DELETE(
 ) {
   const { id } = await params;
   try {
-    const { error } = await (supabaseAdmin as any)
+    const { error } = await (getSupabaseAdmin() as any)
       .from('suppliers')
       .delete()
       .eq('id', id);
