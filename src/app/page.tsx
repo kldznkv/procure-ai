@@ -7,6 +7,9 @@ import { useEffect } from 'react';
 export default function HomePage() {
   const { user, isSignedIn } = useUser();
   const router = useRouter();
+  
+  // Force Vercel to rebuild with latest changes
+  console.log('🚀 ProcureAI HomePage loaded - Latest commit:', process.env.VERCEL_GIT_COMMIT_SHA || 'local');
 
   useEffect(() => {
     if (isSignedIn && user) {
