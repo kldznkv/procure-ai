@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 // Client-side wrapper component to handle Clerk functionality
 function ClerkWrapper({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
-  const { user, isSignedIn, isLoaded } = useUser();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function ClerkWrapper({ children }: { children: React.ReactNode }) {
   }, [isSignedIn, user, router]);
 
   // Show loading state during hydration
-  if (!isClient || !isLoaded) {
+  if (!isClient) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
