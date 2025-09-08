@@ -27,6 +27,12 @@ const nextConfig: NextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
+          {
+            key: 'Content-Security-Policy',
+            value: process.env.NODE_ENV === 'production' 
+              ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.dev https://clerk.com https://*.clerk.dev https://*.clerk.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://api.anthropic.com https://*.clerk.dev https://*.clerk.com; frame-src 'self' https://*.clerk.dev https://*.clerk.com;"
+              : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://api.anthropic.com;"
+          },
         ],
       },
     ];
