@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "procure-ai-v2",
+  "name": "procure-ai-v3",
   "builds": [
     {
       "src": "package.json",
