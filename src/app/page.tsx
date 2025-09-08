@@ -10,6 +10,11 @@ export default function HomePage() {
   
   // Force Vercel to rebuild with latest changes
   console.log('🚀 ProcureAI HomePage loaded - Latest commit:', process.env.VERCEL_GIT_COMMIT_SHA || 'local');
+  
+  // Add visible debug info to detect if our code is running
+  if (typeof window !== 'undefined') {
+    document.title = '🚀 ProcureAI - AI-Powered Procurement Platform';
+  }
 
   useEffect(() => {
     if (isSignedIn && user) {
