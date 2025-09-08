@@ -25,12 +25,12 @@ export const getSupabaseAdminClient = (): SupabaseClient => {
 };
 
 // For backward compatibility - create a proxy that looks like a SupabaseClient
-export const supabaseAdmin = new Proxy({} as any, {
+export const supabaseAdmin = new Proxy({} as SupabaseClient, {
   get(target, prop) {
     const client = getSupabaseAdminClient();
     return (client as any)[prop];
   }
-}) as SupabaseClient;
+});
 
 // Helper function to check if admin client is properly configured
 export function isAdminClientConfigured(): boolean {

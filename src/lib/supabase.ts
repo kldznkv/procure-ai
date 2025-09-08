@@ -20,12 +20,12 @@ export const getSupabaseClient = (): SupabaseClient => {
 };
 
 // For backward compatibility - create a proxy that looks like a SupabaseClient
-export const supabase = new Proxy({} as any, {
+export const supabase = new Proxy({} as SupabaseClient, {
   get(target, prop) {
     const client = getSupabaseClient();
     return (client as any)[prop];
   }
-}) as SupabaseClient;
+});
 
 // Check if Supabase is properly configured
 export const isSupabaseConfigured = (): boolean => {
