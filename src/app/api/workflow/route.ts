@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -106,7 +100,7 @@ export async function POST(request: NextRequest) {
 async function getSupplierMatchingWorkflows(userId: string) {
   try {
     // Get documents that need supplier matching
-    const { data: documents, error } = await supabase
+    const { data: documents, error } = await getSupabaseAdmin()
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -116,7 +110,7 @@ async function getSupplierMatchingWorkflows(userId: string) {
     if (error) throw error;
 
     // Get existing suppliers for matching
-    const { data: suppliers, error: supplierError } = await supabase
+    const { data: suppliers, error: supplierError } = await getSupabaseAdmin()
       .from('suppliers')
       .select('*')
       .eq('user_id', userId);
@@ -157,7 +151,7 @@ async function getContractRenewalAlerts(userId: string) {
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
-    const { data: contracts, error } = await supabase
+    const { data: contracts, error } = await getSupabaseAdmin()
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -202,7 +196,7 @@ async function getContractRenewalAlerts(userId: string) {
 async function getApprovalWorkflows(userId: string) {
   try {
     // Get documents requiring approval
-    const { data: documents, error } = await supabase
+    const { data: documents, error } = await getSupabaseAdmin()
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)

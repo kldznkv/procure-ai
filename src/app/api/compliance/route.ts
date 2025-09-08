@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -106,7 +100,7 @@ export async function POST(request: NextRequest) {
 async function getRegulatoryCompliance(userId: string) {
   try {
     // Get documents for compliance checking
-    const { data: documents, error } = await supabase
+    const { data: documents, error } = await getSupabaseAdmin()
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -160,7 +154,7 @@ async function getRegulatoryCompliance(userId: string) {
 async function getAuditTrail(userId: string) {
   try {
     // Get procurement actions and changes
-    const { data: documents, error } = await supabase
+    const { data: documents, error } = await getSupabaseAdmin()
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -169,7 +163,7 @@ async function getAuditTrail(userId: string) {
     if (error) throw error;
 
     // Get supplier changes
-    const { data: suppliers, error: supplierError } = await supabase
+    const { data: suppliers, error: supplierError } = await getSupabaseAdmin()
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -250,7 +244,7 @@ async function getAuditTrail(userId: string) {
 async function getRiskAssessment(userId: string) {
   try {
     // Get documents for risk assessment
-    const { data: documents, error } = await supabase
+    const { data: documents, error } = await getSupabaseAdmin()
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -259,7 +253,7 @@ async function getRiskAssessment(userId: string) {
     if (error) throw error;
 
     // Get suppliers for risk assessment
-    const { data: suppliers, error: supplierError } = await supabase
+    const { data: suppliers, error: supplierError } = await getSupabaseAdmin()
       .from('suppliers')
       .select('*')
       .eq('user_id', userId);
