@@ -47,7 +47,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {clerkPublishableKey ? (
-          <ClerkProvider publishableKey={clerkPublishableKey}>
+          <ClerkProvider 
+            publishableKey={clerkPublishableKey}
+            signInUrl="/sign-in"
+            signUpUrl="/sign-up"
+            afterSignInUrl="/dashboard"
+            afterSignUpUrl="/dashboard"
+            appearance={{
+              baseTheme: undefined,
+              variables: {
+                colorPrimary: "#2563eb",
+              },
+            }}
+          >
             {children}
           </ClerkProvider>
         ) : (
