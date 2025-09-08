@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Create user record in Supabase
-      const { error: insertError } = await supabaseAdmin
+      const { error: insertError } = await (supabaseAdmin as any)
         .from('users')
         .insert([{
           clerk_user_id: id,
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Update user record in Supabase
-      const { error: updateError } = await supabaseAdmin
+      const { error: updateError } = await (supabaseAdmin as any)
         .from('users')
         .update({
           email: email_addresses?.[0]?.email_address || null,
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
       console.log('👤 Clerk Webhook - Deleting user from Supabase:', { clerk_user_id: id });
 
       // Delete user record from Supabase
-      const { error: deleteError } = await supabaseAdmin
+      const { error: deleteError } = await (supabaseAdmin as any)
         .from('users')
         .delete()
         .eq('clerk_user_id', id);

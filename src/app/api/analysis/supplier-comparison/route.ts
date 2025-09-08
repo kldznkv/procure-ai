@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Fetch supplier data
-    const { data: suppliers, error: suppliersError } = await supabaseAdmin
+    const { data: suppliers, error: suppliersError } = await (supabaseAdmin as any)
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch procurement data for these suppliers
-    const { data: procurementData, error: procurementError } = await supabaseAdmin
+    const { data: procurementData, error: procurementError } = await (supabaseAdmin as any)
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -62,9 +62,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Generate comparison metrics
-    const comparisonData = suppliers.map(supplier => {
-      const supplierDocuments = procurementData.filter(doc => doc.supplier_id === supplier.id);
-      const totalSpend = supplierDocuments.reduce((sum, doc) => sum + (doc.amount || 0), 0);
+    const comparisonData = suppliers.map((supplier: any) => {
+      const supplierDocuments = procurementData.filter((doc: any) => doc.supplier_id === supplier.id);
+      const totalSpend = supplierDocuments.reduce((sum: number, doc: any) => sum + (doc.amount || 0), 0);
       const documentCount = supplierDocuments.length;
       const averageAmount = documentCount > 0 ? totalSpend / documentCount : 0;
 
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Sort by total spend (highest first)
-    comparisonData.sort((a, b) => b.total_spend - a.total_spend);
+    comparisonData.sort((a: any, b: any) => b.total_spend - a.total_spend);
 
     console.log('✅ Supplier Comparison API - Analysis completed for', comparisonData.length, 'suppliers');
     return NextResponse.json({ 

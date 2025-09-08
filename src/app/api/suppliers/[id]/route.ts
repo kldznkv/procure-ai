@@ -15,7 +15,7 @@ export async function GET(
 ) {
   const { id } = await params;
   try {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('suppliers')
       .select('*')
       .eq('id', id)
@@ -49,7 +49,7 @@ export async function PUT(
       }, { status: 400 });
     }
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('suppliers')
       .update({
         name,
@@ -85,7 +85,7 @@ export async function DELETE(
 ) {
   const { id } = await params;
   try {
-    const { error } = await supabaseAdmin
+    const { error } = await (supabaseAdmin as any)
       .from('suppliers')
       .delete()
       .eq('id', id);

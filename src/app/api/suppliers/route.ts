@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('suppliers')
       .insert([{
         user_id,

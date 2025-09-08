@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Build query for procurement documents
-    let query = supabaseAdmin
+    let query = (supabaseAdmin as any)
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
         metrics: trendMetrics,
         period: period,
         total_documents: documents.length,
-        total_spend: documents.reduce((sum, doc) => sum + (doc.amount || 0), 0)
+        total_spend: documents.reduce((sum: number, doc: any) => sum + (doc.amount || 0), 0)
       },
       metadata: {
         analysis_timestamp: new Date().toISOString(),

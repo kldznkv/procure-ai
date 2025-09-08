@@ -286,7 +286,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Update the document with extracted data
-      const { error: updateError } = await supabaseAdmin
+      const { error: updateError } = await (supabaseAdmin as any)
         .from('procurement_documents')
         .update({
           extracted_text: document_text,
@@ -337,7 +337,7 @@ export async function POST(request: NextRequest) {
       
       // For test document IDs, don't update database on error
       if (!document_id.startsWith('test')) {
-        await supabaseAdmin
+        await (supabaseAdmin as any)
           .from('procurement_documents')
           .update({
             extracted_text: document_text,

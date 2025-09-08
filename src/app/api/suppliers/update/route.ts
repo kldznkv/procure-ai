@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 API: Updating supplier:', supplierId, 'with data:', updateData);
 
     // Update supplier with document information
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await (supabaseAdmin as any)
       .from('suppliers')
       .update({
         ...updateData,

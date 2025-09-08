@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 API: Searching for existing supplier:', supplierName, 'for user:', userId);
 
     // First, try to find existing supplier - use admin client to bypass RLS
-    const { data: existingSuppliers, error: searchError } = await supabaseAdmin
+    const { data: existingSuppliers, error: searchError } = await (supabaseAdmin as any)
       .from('suppliers')
       .select('id, name')
       .eq('user_id', userId)
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     console.log('🆕 API: No existing supplier found, creating new one...');
 
     // Create new supplier if none found - use admin client to bypass RLS
-    const { data: newSupplier, error: createError } = await supabaseAdmin
+    const { data: newSupplier, error: createError } = await (supabaseAdmin as any)
       .from('suppliers')
       .insert({
         user_id: userId,

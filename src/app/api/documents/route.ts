@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Insert document with extracted data if provided
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('procurement_documents')
       .insert([{
         user_id,
@@ -163,7 +163,7 @@ export async function PUT(request: NextRequest) {
     if (ai_analysis !== undefined) updateData.ai_analysis = ai_analysis;
     if (processed !== undefined) updateData.processed = processed;
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (supabaseAdmin as any)
       .from('procurement_documents')
       .update(updateData)
       .eq('id', id)
@@ -213,7 +213,7 @@ export async function DELETE(request: NextRequest) {
 
     console.log('🔍 Documents API - Deleting document:', id);
 
-    const { error } = await supabaseAdmin
+    const { error } = await (supabaseAdmin as any)
       .from('documents')
       .delete()
       .eq('id', id);

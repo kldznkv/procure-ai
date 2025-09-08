@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Reprocessing - Starting reprocess for document:', document_id);
 
     // Get the document
-    const { data: document, error: fetchError } = await supabaseAdmin
+    const { data: document, error: fetchError } = await (supabaseAdmin as any)
       .from('procurement_documents')
       .select('*')
       .eq('id', document_id)
