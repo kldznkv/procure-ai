@@ -6,13 +6,8 @@ import { useEffect, useState } from 'react';
 
 // Client-side wrapper component to handle Clerk functionality
 function ClerkWrapper({ children }: { children: React.ReactNode }) {
-  const [isClient, setIsClient] = useState(false);
   const { user, isSignedIn } = useUser();
   const router = useRouter();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // Redirect to dashboard if user is signed in
   useEffect(() => {
@@ -20,18 +15,6 @@ function ClerkWrapper({ children }: { children: React.ReactNode }) {
       router.push('/dashboard');
     }
   }, [isSignedIn, user, router]);
-
-  // Show loading state during hydration
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-700 text-lg">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (isSignedIn && user) {
     return (
@@ -48,12 +31,9 @@ function ClerkWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
-  // Force Vercel to rebuild with latest changes
-  console.log('🚀 ProcureAI HomePage loaded - Latest commit:', process.env.VERCEL_GIT_COMMIT_SHA || 'local');
-  
-  // Add visible debug info to detect if our code is running
+  // Set page title
   if (typeof window !== 'undefined') {
-    document.title = '🚀 ProcureAI - AI-Powered Procurement Platform';
+    document.title = 'ProcureAI - AI-Powered Procurement Platform';
   }
 
   return (
