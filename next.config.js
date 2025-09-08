@@ -31,7 +31,19 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; img-src * data: blob:; font-src * data:; connect-src *; frame-src *; object-src *; base-uri *;"
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.com https://*.clerk.accounts.dev https://*.clerk.dev",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://clerk.com https://*.clerk.com",
+              "img-src 'self' data: blob: https: http:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://clerk.com https://*.clerk.com https://*.clerk.accounts.dev https://*.clerk.dev https://api.anthropic.com https://*.supabase.co wss://*.supabase.co",
+              "frame-src 'self' https://clerk.com https://*.clerk.com https://*.clerk.accounts.dev https://*.clerk.dev",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'"
+            ].join('; ')
           },
         ],
       },
