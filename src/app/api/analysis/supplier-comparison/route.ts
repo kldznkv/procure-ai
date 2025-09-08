@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Fetch supplier data
-    const { data: suppliers, error: suppliersError } = await supabaseAdmin!
+    const { data: suppliers, error: suppliersError } = await supabaseAdmin
       .from('suppliers')
       .select('*')
       .eq('user_id', userId)
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch procurement data for these suppliers
-    const { data: procurementData, error: procurementError } = await supabaseAdmin!
+    const { data: procurementData, error: procurementError } = await supabaseAdmin
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)

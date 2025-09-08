@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Build query for procurement documents
-    let query = supabaseAdmin!
+    let query = supabaseAdmin
       .from('procurement_documents')
       .select('*')
       .eq('user_id', userId)

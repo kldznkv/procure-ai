@@ -48,19 +48,19 @@ ProcureAI is a modern, intelligent procurement management system that leverages 
 - Node.js 18+ 
 - npm 8+
 - Supabase account
-- Anthropic API key
+   - Anthropic API key
 - Clerk account
 
 ### Installation
 
 1. **Clone the repository**
-   ```bash
+```bash
    git clone https://github.com/your-username/procure-ai.git
    cd procure-ai
-   ```
+```
 
 2. **Install dependencies**
-   ```bash
+```bash
    npm install
    ```
 

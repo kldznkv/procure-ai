@@ -1,36 +1,18 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Lazy initialization of admin client
-let adminClient: SupabaseClient | null = null;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-// Get admin client (lazy initialization)
-export const getSupabaseAdminClient = (): SupabaseClient => {
-  if (!adminClient) {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !supabaseServiceRole) {
-      console.error('Supabase admin environment variables are not configured');
-      throw new Error('Supabase admin environment variables are not configured. Please check your .env.local file.');
+export const supabaseAdmin: SupabaseClient = createClient(
+  supabaseUrl,
+  supabaseServiceKey,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
     }
-
-    adminClient = createClient(supabaseUrl, supabaseServiceRole, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    });
   }
-  return adminClient;
-};
-
-// For backward compatibility - create a proxy that looks like a SupabaseClient
-export const supabaseAdmin = new Proxy({} as SupabaseClient, {
-  get(target, prop) {
-    const client = getSupabaseAdminClient();
-    return (client as any)[prop];
-  }
-});
+);
 
 // Helper function to check if admin client is properly configured
 export function isAdminClientConfigured(): boolean {

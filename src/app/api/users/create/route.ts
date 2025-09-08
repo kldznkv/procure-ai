@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if user already exists
-    const { data: existingUser, error: checkError } = await supabaseAdmin!
+    const { data: existingUser, error: checkError } = await supabaseAdmin
       .from('users')
       .select('id')
       .eq('clerk_user_id', clerk_user_id)
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user record in Supabase
-    const { data: newUser, error: insertError } = await supabaseAdmin!
+    const { data: newUser, error: insertError } = await supabaseAdmin
       .from('users')
       .insert([{
         clerk_user_id,
