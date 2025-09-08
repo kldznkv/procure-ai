@@ -272,12 +272,12 @@ async function getAllWorkflows(userId: string) {
 
 // Helper functions
 function generateSupplierMatches(document: Record<string, unknown>, suppliers: Array<Record<string, unknown>>) {
-  const documentSupplier = document.supplier_name?.toLowerCase();
+  const documentSupplier = (document.supplier_name as string)?.toLowerCase();
   if (!documentSupplier) return [];
 
   return suppliers
     .map(supplier => {
-      const supplierName = supplier.name.toLowerCase();
+      const supplierName = (supplier.name as string).toLowerCase();
       const similarity = calculateSimilarity(documentSupplier, supplierName);
       
       return {
@@ -331,11 +331,11 @@ function calculateMatchConfidence(document: Record<string, unknown>, suggestions
   
   // Boost confidence based on document type and supplier info
   let boost = 0;
-  if (document.supplier_name && document.supplier_name.trim()) boost += 0.2;
+  if (document.supplier_name && (document.supplier_name as string).trim()) boost += 0.2;
   if (document.amount) boost += 0.1;
   if (document.document_type === 'Contract' || document.document_type === 'Invoice') boost += 0.1;
   
-  return Math.min(1.0, baseConfidence + boost);
+  return Math.min(1.0, (baseConfidence as number) + boost);
 }
 
 function generateRenewalActions(contract: Record<string, unknown>, daysUntilRenewal: number): string[] {
@@ -359,9 +359,9 @@ function generateRenewalActions(contract: Record<string, unknown>, daysUntilRene
 }
 
 function calculateApprovalPriority(document: Record<string, unknown>): string {
-  const amount = document.amount || 0;
+  const amount = (document.amount as number) || 0;
   const daysInQueue = Math.ceil(
-    (new Date().getTime() - new Date(document.created_at).getTime()) / (1000 * 60 * 60 * 24)
+    (new Date().getTime() - new Date(document.created_at as string).getTime()) / (1000 * 60 * 60 * 24)
   );
   
   if (amount > 10000 || daysInQueue > 5) return 'high';
@@ -370,7 +370,7 @@ function calculateApprovalPriority(document: Record<string, unknown>): string {
 }
 
 function getRequiredApprovers(document: Record<string, unknown>): string[] {
-  const amount = document.amount || 0;
+  const amount = (document.amount as number) || 0;
   
   if (amount > 10000) return ['Manager', 'Director', 'Finance'];
   if (amount > 5000) return ['Manager', 'Finance'];

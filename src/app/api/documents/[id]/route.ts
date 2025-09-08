@@ -3,7 +3,7 @@ import { supabaseAdmin, isAdminClientConfigured } from '../../../../lib/supabase
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check if admin client is configured
@@ -14,7 +14,7 @@ export async function PUT(
       }, { status: 500 });
     }
 
-    const documentId = params.id;
+    const { id: documentId } = await params;
     const body = await request.json();
     const { extracted_text, extracted_data, ai_analysis, processed } = body;
 
@@ -62,14 +62,14 @@ export async function PUT(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const documentId = params.id;
+    const { id: documentId } = await params;
 
     console.log('🔍 Documents API - Fetching document:', documentId);
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabaseAdmin!
       .from('procurement_documents')
       .select('*')
       .eq('id', documentId)

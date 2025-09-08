@@ -256,7 +256,7 @@ export default function DocumentsPage() {
                     >
                       Download
                     </button>
-                    {(!doc.ai_analysis || doc.status === 'processing_failed') && (
+                    {(!doc.ai_analysis || (doc as any).processing_error) && (
                       <button
                         onClick={() => handleReprocess(doc.id)}
                         className="px-4 py-2 text-orange-600 border border-orange-300 rounded-lg hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-colors"

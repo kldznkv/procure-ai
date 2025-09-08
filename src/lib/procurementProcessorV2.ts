@@ -1,4 +1,6 @@
 import { supabase } from './supabase';
+import { getAIService } from './ai/ai-service';
+import { ChatMessage } from './ai/ai-service';
 import { 
   ProcurementDocument, 
   ProcurementExtractedData, 
@@ -417,7 +419,7 @@ function generateAIAnalysis(extractedData: ProcurementExtractedData, text: strin
     deadlines: [],
     analysis_timestamp: new Date().toISOString(),
     confidence_score: 0.95,
-    model_version: 'bulletproof-ai-1.0'
+    model_version: 'unified-ai-v2.0'
   };
 }
 
@@ -446,8 +448,8 @@ function parseAIResponse(response: string): { extractedData: ProcurementExtracte
   }
 }
 
-// Main bulletproof AI analysis function
-export async function analyzeProcurementDocument(
+// Main bulletproof AI analysis function using unified AI service
+export async function analyzeProcurementDocumentV2(
   text: string,
   documentType: string,
   userId: string
@@ -455,7 +457,7 @@ export async function analyzeProcurementDocument(
   try {
     // Log analysis start for debugging (can be removed in production)
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 Starting BULLETPROOF AI analysis...');
+      console.log('🔍 Starting UNIFIED AI analysis...');
       console.log('📄 Document text length:', text.length);
       console.log('📄 Document type:', documentType);
     }
@@ -466,19 +468,18 @@ export async function analyzeProcurementDocument(
     // Step 2: Create bulletproof prompt
     const prompt = createBulletproofPrompt(documentType, text, extractedPatterns);
     
-    // Step 3: Use unified AI service for processing
-    const { getAIService } = await import('./ai/ai-service');
+    // Step 3: Use unified AI service
     const aiService = getAIService();
     
-    const messages = [
-      { role: 'system' as const, content: 'You are an expert procurement document analyzer. Extract data accurately and return only valid JSON.' },
-      { role: 'user' as const, content: prompt }
+    const messages: ChatMessage[] = [
+      { role: 'system', content: 'You are an expert procurement document analyzer. Extract data accurately and return only valid JSON.' },
+      { role: 'user', content: prompt }
     ];
     
-    const aiResponse = await aiService.chat(messages);
+    const response = await aiService.chat(messages);
     
     // Step 4: Parse AI response
-    const { extractedData, aiAnalysis } = parseAIResponse(aiResponse);
+    const { extractedData, aiAnalysis } = parseAIResponse(response);
     
     // Step 5: Cross-validate with pattern extraction
     const validatedData = crossValidateExtractedData(extractedData, text, extractedPatterns);
@@ -488,8 +489,10 @@ export async function analyzeProcurementDocument(
     
     // Log completion for debugging (can be removed in production)
     if (process.env.NODE_ENV === 'development') {
-      console.log('✅ BULLETPROOF AI analysis completed');
+      console.log('✅ UNIFIED AI analysis completed');
       console.log('📊 Final extracted data:', validatedData);
+      console.log('🤖 AI Provider used: Claude');
+      console.log('🧠 AI Model used: claude-3-5-sonnet-20241022');
     }
     
     return {
@@ -498,7 +501,7 @@ export async function analyzeProcurementDocument(
     };
     
   } catch (error) {
-    console.error('BULLETPROOF AI analysis failed:', error);
+    console.error('UNIFIED AI analysis failed:', error);
     
     // Fallback: use pattern extraction only
     const fallbackPatterns = extractKeyPatternsFromText(text);
@@ -533,14 +536,14 @@ export async function analyzeProcurementDocument(
         deadlines: [],
         analysis_timestamp: new Date().toISOString(),
         confidence_score: 0.7,
-        model_version: 'pattern-fallback-1.0'
+        model_version: 'pattern-fallback-v2.0'
       }
     };
   }
 }
 
-// Additional required functions for document processing
-export async function uploadProcurementDocument(
+// Additional required functions for document processing (same as original)
+export async function uploadProcurementDocumentV2(
   file: File,
   documentType: string,
   userId: string
@@ -549,8 +552,8 @@ export async function uploadProcurementDocument(
     // Extract text from file
     const extractedText = await extractTextFromFile(file);
     
-    // Analyze document with AI
-    const { extractedData, aiAnalysis } = await analyzeProcurementDocument(
+    // Analyze document with unified AI
+    const { extractedData, aiAnalysis } = await analyzeProcurementDocumentV2(
       extractedText,
       documentType,
       userId

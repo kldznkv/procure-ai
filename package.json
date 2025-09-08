@@ -1,19 +1,24 @@
 {
   "name": "procure-ai",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "AI-powered procurement document processing and analysis platform",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next out",
+    "preview": "next build && next start"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
     "@clerk/nextjs": "^6.31.6",
     "@supabase/supabase-js": "^2.56.0",
+    "@tailwindcss/postcss": "^4.1.13",
+    "critters": "^0.0.23",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.1",
     "mammoth": "^1.10.0",
     "next": "15.5.2",
     "pdf-parse": "^1.1.1",
@@ -22,17 +27,32 @@
     "react-dom": "19.1.0",
     "react-dropzone": "^14.3.8",
     "recharts": "^3.1.2",
-    "svix": "^1.75.0"
+    "svix": "^1.76.1",
+    "tesseract.js": "^6.0.1",
+    "uuid": "^12.0.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "procurement",
+    "ai",
+    "document-processing",
+    "claude",
+    "supabase",
+    "nextjs"
+  ],
+  "author": "ProcureAI Team",
+  "license": "MIT"
 }

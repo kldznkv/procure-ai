@@ -192,7 +192,8 @@ export default function DashboardPage() {
         body: JSON.stringify({
           document_id: documentId,
           document_text: extractedText,
-          document_type: documentType
+          document_type: documentType,
+          user_id: user.id
         }),
       });
 
@@ -221,16 +222,38 @@ export default function DashboardPage() {
 
   // Helper function to extract text from files
   const extractTextFromFile = async (file: File): Promise<string> => {
-    if (file.type === 'application/pdf') {
-      // For PDFs, we'll use a simple text extraction approach
-      // In a real implementation, you'd use PDF.js or similar
-      return `PDF Content: ${file.name}\n\nThis is a placeholder for PDF text extraction. In production, this would extract actual text from the PDF file.`;
-    } else if (file.type.includes('text') || file.type.includes('document')) {
-      // For text files, read the content
-      return await file.text();
-    } else {
-      // For other file types, return filename as placeholder
-      return `File Content: ${file.name}\n\nThis file type (${file.type}) requires specialized processing.`;
+    try {
+      // Import the PDF extractor
+      const { extractTextFromFile: extractText, validateExtractedText } = await import('../../lib/pdf-extractor');
+      
+      console.log('📄 Starting text extraction for:', file.name, 'type:', file.type);
+      
+      // Extract text using the proper utility
+      const result = await extractText(file);
+      
+      if (!result.success) {
+        console.error('❌ Text extraction failed:', result.error);
+        throw new Error(`Text extraction failed: ${result.error}`);
+      }
+      
+      // Validate the extracted text
+      const validation = validateExtractedText(result.text, file.name);
+      
+      if (!validation.isValid) {
+        console.warn('⚠️ Text extraction quality issues:', validation.issues);
+        console.warn('💡 Suggestions:', validation.suggestions);
+      }
+      
+      console.log('✅ Text extraction completed successfully');
+      console.log('📄 Text length:', result.text.length);
+      console.log('📄 Quality:', validation.quality);
+      console.log('📄 Text preview (first 200 chars):', result.text.substring(0, 200));
+      
+      return result.text;
+      
+    } catch (error) {
+      console.error('❌ Text extraction error:', error);
+      throw new Error(`Failed to extract text from ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -238,6 +261,20 @@ export default function DashboardPage() {
   const getDocumentType = (filename: string): string => {
     const lowerFilename = filename.toLowerCase();
     
+    // Check for image files first
+    if (lowerFilename.match(/\.(jpg|jpeg|png|gif|bmp|tiff)$/)) {
+      if (lowerFilename.includes('invoice') || lowerFilename.includes('faktura')) {
+        return 'Invoice'; // Use existing Invoice type for image invoices
+      } else if (lowerFilename.includes('receipt') || lowerFilename.includes('paragon')) {
+        return 'Receipt'; // Use existing Receipt type for image receipts
+      } else if (lowerFilename.includes('quote') || lowerFilename.includes('oferta')) {
+        return 'Quote'; // Use existing Quote type for image quotes
+      } else {
+        return 'Other'; // Use existing Other type for generic image documents
+      }
+    }
+    
+    // Regular document type detection
     if (lowerFilename.includes('invoice') || lowerFilename.includes('faktura')) {
       return 'Invoice';
     } else if (lowerFilename.includes('purchase') || lowerFilename.includes('po') || lowerFilename.includes('order')) {
@@ -368,7 +405,7 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-2">
               <input
                 type="file"
-                accept=".pdf,.doc,.docx,.txt"
+                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.bmp,.tiff"
                 onChange={handleFileUpload}
                 disabled={isUploading}
                 className="hidden"
@@ -580,7 +617,7 @@ export default function DashboardPage() {
 
             {/* Spending Analysis Chart */}
             <SpendingAnalysisChart 
-              data={patternsData} 
+              data={patternsData as any || { by_document_type: [], by_supplier: [], by_month: [], top_suppliers: [], top_document_types: [], spending_distribution: { low: 0, medium: 0, high: 0, very_high: 0 } }} 
               title="Spending Patterns"
               height={350}
             />
@@ -625,7 +662,7 @@ export default function DashboardPage() {
           {/* Comparison Chart */}
           {comparisonData.length > 0 && (
             <PriceComparisonChart 
-              data={comparisonData} 
+              data={comparisonData as any} 
               title="Supplier Comparison Analysis"
               height={400}
             />

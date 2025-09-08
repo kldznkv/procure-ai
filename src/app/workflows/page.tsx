@@ -18,6 +18,7 @@ interface WorkflowItem {
   amount?: number;
   recommendations?: string[];
   required_approvers?: string[];
+  next_action?: string;
 }
 
 interface WorkflowData {

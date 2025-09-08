@@ -81,12 +81,12 @@ export async function GET(request: NextRequest) {
 
 function analyzeSpendingPatterns(documents: any[]) {
   const patterns = {
-    by_document_type: {},
-    by_supplier: {},
+    by_document_type: [] as any[],
+    by_supplier: [] as any[],
     by_amount_range: {},
-    by_month: {},
-    top_suppliers: [],
-    top_document_types: [],
+    by_month: [] as any[],
+    top_suppliers: [] as any[],
+    top_document_types: [] as any[],
     spending_distribution: {
       low: 0,      // 0-1000
       medium: 0,   // 1000-10000
