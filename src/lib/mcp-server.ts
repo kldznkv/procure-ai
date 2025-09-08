@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from './supabase-admin';
 import { ProcurementExtractedData, ProcurementLineItem } from '../types/procurement';
 
 // TypeScript interfaces to replace 'any' types
@@ -51,7 +52,6 @@ interface ExtractedData {
 // MCP Server for Procurement Document Analysis
 export class ProcurementMCPServer {
   private supabase: SupabaseClient | null = null;
-  private supabaseAdmin: SupabaseClient | null = null;
   private initialized = false;
 
   constructor() {
@@ -72,14 +72,7 @@ export class ProcurementMCPServer {
 
       this.supabase = createClient(supabaseUrl, supabaseKey);
       
-      if (supabaseServiceRole) {
-        this.supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole, {
-          auth: { autoRefreshToken: false, persistSession: false }
-        });
-      } else {
-        // Fallback to regular client if service role not available
-        this.supabaseAdmin = this.supabase;
-      }
+      // Admin client will be created lazily when needed
 
       this.initialized = true;
       console.log('✅ MCP Server initialized successfully');
@@ -94,11 +87,9 @@ export class ProcurementMCPServer {
     try {
       await this.ensureInitialized();
       
-      if (!this.supabaseAdmin) {
-        throw new Error('Supabase admin client not initialized');
-      }
+      const supabaseAdmin = getSupabaseAdmin();
       
-      const { data, error } = await this.supabaseAdmin
+      const { data, error } = await supabaseAdmin
         .from('suppliers')
         .select('*')
         .eq('user_id', userId)
@@ -128,12 +119,10 @@ export class ProcurementMCPServer {
     try {
       await this.ensureInitialized();
       
-      if (!this.supabaseAdmin) {
-        throw new Error('Supabase admin client not initialized');
-      }
+      const supabaseAdmin = getSupabaseAdmin();
       
       // Get historical data for validation
-      const { data: historicalData, error } = await this.supabaseAdmin
+      const { data: historicalData, error } = await supabaseAdmin
         .from('procurement_documents')
         .select('amount, currency, document_type')
         .eq('currency', currency)
