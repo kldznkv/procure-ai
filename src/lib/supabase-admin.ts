@@ -1,10 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Lazy initialization of admin client
-let adminClient: any = null;
+let adminClient: SupabaseClient | null = null;
 
 // Get admin client (lazy initialization)
-export const getSupabaseAdminClient = () => {
+export const getSupabaseAdminClient = (): SupabaseClient => {
   if (!adminClient) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -24,13 +24,13 @@ export const getSupabaseAdminClient = () => {
   return adminClient;
 };
 
-// For backward compatibility
-export const supabaseAdmin = new Proxy({}, {
+// For backward compatibility - create a proxy that looks like a SupabaseClient
+export const supabaseAdmin = new Proxy({} as any, {
   get(target, prop) {
     const client = getSupabaseAdminClient();
-    return client[prop];
+    return (client as any)[prop];
   }
-});
+}) as SupabaseClient;
 
 // Helper function to check if admin client is properly configured
 export function isAdminClientConfigured(): boolean {
