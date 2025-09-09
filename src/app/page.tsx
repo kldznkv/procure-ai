@@ -4,35 +4,17 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-// Client-side wrapper component to handle Clerk functionality with debugging
 function ClerkWrapper({ children }: { children: React.ReactNode }) {
   const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
 
-  // Debug logging for Railway troubleshooting
-  useEffect(() => {
-    console.log('🔐 ClerkWrapper Debug:', {
-      isLoaded,
-      isSignedIn,
-      hasUser: !!user,
-      userId: user?.id,
-      userEmail: user?.emailAddresses?.[0]?.emailAddress,
-      environment: process.env.NODE_ENV,
-      platform: 'client'
-    });
-  }, [isLoaded, isSignedIn, user]);
-
-  // Redirect to dashboard if user is signed in
   useEffect(() => {
     if (isSignedIn && user) {
-      console.log('🔄 Redirecting to dashboard...', { userId: user.id });
       router.push('/dashboard');
     }
   }, [isSignedIn, user, router]);
 
-  // Show loading state while Clerk is initializing
   if (!isLoaded) {
-    console.log('⏳ Clerk is loading...');
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
