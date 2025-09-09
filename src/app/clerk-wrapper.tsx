@@ -7,9 +7,13 @@ interface ClerkWrapperProps {
 }
 
 export function ClerkWrapper({ children }: ClerkWrapperProps) {
-  // Always render ClerkProvider to prevent static generation issues
-  // The publishableKey will be available at runtime
-  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder';
+  // Get the publishable key from environment variables
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  
+  // If no publishable key, render children without Clerk to prevent errors
+  if (!publishableKey || publishableKey === 'your_clerk_publishable_key' || publishableKey.trim() === '') {
+    return <>{children}</>;
+  }
 
   return (
     <ClerkProvider 

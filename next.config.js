@@ -7,9 +7,6 @@ const nextConfig = {
   // Enable standalone output for Docker (Railway compatible)
   output: 'standalone',
   
-  // Disable static generation to prevent Clerk issues during build
-  generateStaticParams: false,
-  
   // Security headers
   async headers() {
     return [
