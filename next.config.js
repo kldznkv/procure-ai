@@ -4,7 +4,7 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Enable standalone output for Docker
+  // Enable standalone output for Docker (Railway compatible)
   output: 'standalone',
   
   // Security headers
@@ -120,6 +120,12 @@ const nextConfig = {
   // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
+
+  // Railway-specific configuration
+  serverRuntimeConfig: {
+    // Railway sets PORT automatically
+    port: process.env.PORT || 3000,
   },
 
   // Redirects
