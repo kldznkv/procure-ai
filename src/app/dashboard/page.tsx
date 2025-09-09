@@ -363,8 +363,6 @@ export default function DashboardPage() {
   // Navigate to documents page
   const navigateToDocuments = () => router.push('/documents');
 
-  // Navigate to analytics page
-  const navigateToAnalytics = () => router.push('/analytics');
 
   if (!isSignedIn) {
     return (
@@ -536,60 +534,8 @@ export default function DashboardPage() {
             </div>
           </button>
 
-                                <button
-                        onClick={navigateToAnalytics}
-                        className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer text-left"
-                      >
-                        <div className="flex items-center">
-                          <div className="p-2 bg-purple-100 rounded-lg">
-                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-900">Advanced Analytics</h3>
-                            <p className="text-gray-600">Deep dive into procurement insights</p>
-                          </div>
-                        </div>
-                      </button>
                     </div>
 
-                    {/* Phase 3 Features */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                      <button
-                        onClick={() => router.push('/workflows')}
-                        className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer text-left"
-                      >
-                        <div className="flex items-center">
-                          <div className="p-2 bg-orange-100 rounded-lg">
-                            <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-900">Workflow Automation</h3>
-                            <p className="text-gray-600">Automated supplier matching and approval workflows</p>
-                          </div>
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => router.push('/compliance')}
-                        className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer text-left"
-                      >
-                        <div className="flex items-center">
-                          <div className="p-2 bg-red-100 rounded-lg">
-                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-900">Compliance Monitoring</h3>
-                            <p className="text-gray-600">Regulatory compliance and risk assessment</p>
-                          </div>
-                        </div>
-                      </button>
-        </div>
 
         {/* Analysis Section */}
         <div className="mb-8">

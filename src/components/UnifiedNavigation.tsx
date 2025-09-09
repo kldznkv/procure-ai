@@ -87,36 +87,6 @@ export default function UnifiedNavigation({
             >
               📄 Documents
             </button>
-            <button
-              onClick={() => router.push('/analytics')}
-              className={`py-4 px-3 text-sm font-medium transition-colors ${
-                isActive('/analytics')
-                  ? 'text-blue-600 border-b-2 border-blue-500'
-                  : 'text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-300'
-              }`}
-            >
-              📈 Analytics
-            </button>
-            <button
-              onClick={() => router.push('/workflows')}
-              className={`py-4 px-3 text-sm font-medium transition-colors ${
-                isActive('/workflows')
-                  ? 'text-blue-600 border-b-2 border-blue-500'
-                  : 'text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-300'
-              }`}
-            >
-              🔄 Workflows
-            </button>
-            <button
-              onClick={() => router.push('/compliance')}
-              className={`py-4 px-3 text-sm font-medium transition-colors ${
-                isActive('/compliance')
-                  ? 'text-blue-600 border-b-2 border-blue-500'
-                  : 'text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-300'
-              }`}
-            >
-              ✅ Compliance
-            </button>
           </div>
         </div>
       </nav>
