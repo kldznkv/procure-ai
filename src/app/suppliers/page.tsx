@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useUser } from '@clerk/nextjs';
+// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+// import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 
@@ -18,7 +19,10 @@ interface Supplier {
 }
 
 export default function SuppliersPage() {
-  const { user, isSignedIn } = useUser();
+  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+  // const { user, isSignedIn } = useUser();
+  const user = { id: 'test-user-id' };
+  const isSignedIn = true;
   const router = useRouter();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
