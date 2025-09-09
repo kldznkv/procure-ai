@@ -1,128 +1,75 @@
-'use client';
-
-import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-function ClerkWrapper({ children }: { children: React.ReactNode }) {
-  const { user, isSignedIn, isLoaded } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isSignedIn && user) {
-      router.push('/dashboard');
-    }
-  }, [isSignedIn, user, router]);
-
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-700 text-lg">Loading ProcureAI...</p>
-          <p className="mt-2 text-gray-500 text-sm">Initializing authentication...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isSignedIn && user) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-700 text-lg">Redirecting to dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
-}
+import Link from 'next/link';
 
 export default function HomePage() {
-  // Set page title using useEffect to avoid hydration issues
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.title = 'ProcureAI - AI-Powered Procurement Platform';
-    }
-  }, []);
-
   return (
-    <ClerkWrapper>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <h1 className="text-xl font-semibold text-gray-900">
-                  ProcureTrack
-                </h1>
-                <span className="ml-2 text-sm text-gray-600">
-                  Procurement Intelligence
-                </span>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-semibold text-gray-900">
+                ProcureAI
+              </h1>
+              <span className="ml-2 text-sm text-gray-600">
+                AI-Powered Procurement Platform
+              </span>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* Hero Section */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
-              Procurement Operations
-              <span className="block text-blue-600">Intelligence Platform</span>
-            </h1>
-            <p className="mt-6 text-xl text-slate-700 max-w-3xl mx-auto">
-              Transform your procurement process with AI-powered document analysis, 
-              intelligent supplier management, and data-driven insights.
+      {/* Hero Section */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
+            AI-Powered Procurement Platform
+          </h1>
+          <p className="mt-6 text-xl text-slate-700 max-w-3xl mx-auto">
+            Transform your procurement process with intelligent automation, data-driven insights, and seamless supplier management.
+          </p>
+          
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/sign-up"
+              className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+            >
+              Get Started
+            </Link>
+            <Link
+              href="/sign-in"
+              className="inline-flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+            >
+              Sign In
+            </Link>
+          </div>
+        </div>
+
+        {/* Features Grid */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+          <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+            <div className="text-blue-600 text-4xl mb-4">📊</div>
+            <h3 className="text-xl font-semibold text-gray-900">Intelligent Document Analysis</h3>
+            <p className="mt-3 text-slate-700">
+              Automate data extraction from invoices, contracts, and other procurement documents with AI.
             </p>
-            
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => window.location.href = '/sign-up'}
-                className="px-8 py-4 bg-blue-600 text-white text-lg font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-              >
-                Get Started
-              </button>
-              <button
-                onClick={() => window.location.href = '/sign-in'}
-                className="px-8 py-4 bg-white text-blue-600 text-lg font-medium rounded-lg border-2 border-blue-600 hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
-              >
-                Sign In
-              </button>
-            </div>
           </div>
-
-          {/* Features Grid */}
-          <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">AI Document Analysis</h3>
-              <p className="text-slate-700">
-                Automatically extract key information from invoices, contracts, and purchase orders using advanced AI.
-              </p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">🏢</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Supplier Intelligence</h3>
-              <p className="text-slate-700">
-                Comprehensive supplier profiles with performance metrics, risk assessment, and relationship management.
-              </p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Analytics & Insights</h3>
-              <p className="text-slate-700">
-                Data-driven insights and comparative analysis to optimize your procurement strategy and reduce costs.
-              </p>
-            </div>
+          <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+            <div className="text-green-600 text-4xl mb-4">🤝</div>
+            <h3 className="text-xl font-semibold text-gray-900">Streamlined Supplier Management</h3>
+            <p className="mt-3 text-slate-700">
+              Manage supplier relationships, performance, and compliance all in one place.
+            </p>
           </div>
-        </main>
-      </div>
-    </ClerkWrapper>
+          <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+            <div className="text-purple-600 text-4xl mb-4">💡</div>
+            <h3 className="text-xl font-semibold text-gray-900">Data-Driven Insights</h3>
+            <p className="text-slate-700">
+              Data-driven insights and comparative analysis to optimize your procurement strategy and reduce costs.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }

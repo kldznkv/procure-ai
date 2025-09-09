@@ -18,54 +18,19 @@ export const metadata: Metadata = {
   description: "Transform your procurement process with AI-powered document analysis, intelligent supplier management, and data-driven insights.",
 };
 
-function getClerkPublishableKey(): string | undefined {
-  const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-  if (!key || key === 'your_clerk_publishable_key' || key.trim() === '') {
-    return undefined;
-  }
-  return key;
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const clerkPublishableKey = getClerkPublishableKey();
-
   return (
     <html lang="en">
-      <head>
-        {/* CSP is handled in next.config.js */}
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {clerkPublishableKey ? (
-          <ClerkProvider 
-            publishableKey={clerkPublishableKey}
-            signInUrl="/sign-in"
-            signUpUrl="/sign-up"
-            afterSignInUrl="/dashboard"
-            afterSignUpUrl="/dashboard"
-            appearance={{
-              baseTheme: undefined,
-              variables: {
-                colorPrimary: "#2563eb",
-              },
-            }}
-          >
-            {children}
-          </ClerkProvider>
-        ) : (
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-700 text-lg">Loading ProcureAI...</p>
-              <p className="mt-2 text-gray-500 text-sm">Setting up authentication...</p>
-            </div>
-          </div>
-        )}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ClerkProvider 
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+        >
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );
