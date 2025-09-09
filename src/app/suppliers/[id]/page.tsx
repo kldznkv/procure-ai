@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 // import { useUser } from '@clerk/nextjs'; // DISABLED FOR DEPLOYMENT
 import { useParams } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
+import { safeApiCall, handleApiError } from '@/lib/api-utils';
 
 interface Supplier {
   id: string;
@@ -58,26 +59,32 @@ export default function SupplierDetailPage() {
 
   const loadSupplierData = useCallback(async () => {
     try {
-      // Load supplier details
-      const supplierResponse = await fetch(`/api/suppliers/${supplierId}`);
-      if (supplierResponse.ok) {
-        const result = await supplierResponse.json();
-        if (result.success) {
-          setSupplier(result.data);
-          setEditForm(result.data);
-        }
+      // Load supplier details with safe API call
+      const supplierResult = await safeApiCall(
+        `/api/suppliers/${supplierId}`,
+        { method: 'GET' },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      
+      if (supplierResult.success) {
+        setSupplier(supplierResult.data);
+        setEditForm(supplierResult.data);
       }
 
-      // Load supplier documents
-      const documentsResponse = await fetch(`/api/documents?user_id=${user?.id}&supplier_id=${supplierId}`);
-      if (documentsResponse.ok) {
-        const result = await documentsResponse.json();
-        if (result.success) {
-          setDocuments(result.data || []);
-        }
+      // Load supplier documents with safe API call
+      const documentsResult = await safeApiCall(
+        `/api/documents?user_id=${user?.id}&supplier_id=${supplierId}`,
+        { method: 'GET' },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      
+      if (documentsResult.success) {
+        setDocuments(documentsResult.data || []);
       }
     } catch (error) {
       console.error('Failed to load supplier data:', error);
+      setSupplier(null);
+      setDocuments([]);
     } finally {
       setIsLoading(false);
     }
@@ -91,19 +98,20 @@ export default function SupplierDetailPage() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`/api/suppliers/${supplierId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editForm)
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          setSupplier(result.data);
-          setEditForm(result.data);
-          setIsEditing(false);
-        }
+      const result = await safeApiCall(
+        `/api/suppliers/${supplierId}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(editForm)
+        },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      
+      if (result.success) {
+        setSupplier(result.data);
+        setEditForm(result.data);
+        setIsEditing(false);
       }
     } catch (error) {
       console.error('Failed to update supplier:', error);

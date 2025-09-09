@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 // import { useUser } from '@clerk/nextjs'; // DISABLED FOR DEPLOYMENT
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
+import { safeApiCall, handleApiError } from '@/lib/api-utils';
 
 // Force dynamic rendering to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -40,15 +41,18 @@ export default function DocumentsPage() {
     if (!user?.id) return;
     
     try {
-      const response = await fetch(`/api/documents?user_id=${user.id}&processed=true`);
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          setDocuments(result.data || []);
-        }
+      const result = await safeApiCall(
+        `/api/documents?user_id=${user.id}&processed=true`,
+        { method: 'GET' },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      
+      if (result.success) {
+        setDocuments(result.data || []);
       }
     } catch (error) {
       console.error('Failed to load documents:', error);
+      setDocuments([]); // Set empty array to prevent UI errors
     } finally {
       setIsLoading(false);
     }

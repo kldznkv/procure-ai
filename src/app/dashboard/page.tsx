@@ -7,6 +7,7 @@ import UnifiedNavigation from '../../components/UnifiedNavigation';
 import PriceComparisonChart from '../../components/PriceComparisonChart';
 import CostTrendsChart from '../../components/CostTrendsChart';
 import SpendingAnalysisChart from '../../components/SpendingAnalysisChart';
+import { safeApiCall, createApiResponse, handleApiError } from '../../lib/api-utils';
 
 // Force dynamic rendering to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -112,34 +113,41 @@ export default function DashboardPage() {
     }
   }, [user?.id]);
 
-  // Load analysis data
+  // Load analysis data with timeout and retry limits
   const loadAnalysisData = async () => {
     if (!user?.id) return;
 
     try {
-      // Load cost trends
-      const trendsResponse = await fetch(`/api/analysis/cost-trends?user_id=${user.id}&period=${selectedPeriod}`);
-      if (trendsResponse.ok) {
-        const trendsResult = await trendsResponse.json();
-        // Convert grouped trends object to array format for charts
-        const trendsObject = trendsResult.data.trends || {};
-        const trendsArray = Object.entries(trendsObject).map(([period, docs]) => ({
-          month: period,
-          count: (docs as any[]).length,
-          total_spend: (docs as any[]).reduce((sum, doc) => sum + (doc.amount || 0), 0),
-          average_spend: (docs as any[]).reduce((sum, doc) => sum + (doc.amount || 0), 0) / (docs as any[]).length || 0
-        }));
-        setTrendsData(trendsArray);
-      }
+      // Load cost trends with safe API call
+      const trendsResult = await safeApiCall<any>(
+        `/api/analysis/cost-trends?user_id=${user.id}&period=${selectedPeriod}`,
+        { method: 'GET' },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      
+      // Convert grouped trends object to array format for charts
+      const trendsObject = trendsResult.data?.trends || {};
+      const trendsArray = Object.entries(trendsObject).map(([period, docs]) => ({
+        month: period,
+        count: (docs as any[]).length,
+        total_spend: (docs as any[]).reduce((sum, doc) => sum + (doc.amount || 0), 0),
+        average_spend: (docs as any[]).reduce((sum, doc) => sum + (doc.amount || 0), 0) / (docs as any[]).length || 0
+      }));
+      setTrendsData(trendsArray);
 
-      // Load spending patterns
-      const patternsResponse = await fetch(`/api/analysis/spending-patterns?user_id=${user.id}`);
-      if (patternsResponse.ok) {
-        const patternsResult = await patternsResponse.json();
-        setPatternsData(patternsResult.data);
-      }
+      // Load spending patterns with safe API call
+      const patternsResult = await safeApiCall<any>(
+        `/api/analysis/spending-patterns?user_id=${user.id}`,
+        { method: 'GET' },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      setPatternsData(patternsResult.data || []);
+      
     } catch (error) {
       console.error('Error loading analysis data:', error);
+      // Set empty data to prevent UI errors
+      setTrendsData([]);
+      setPatternsData(null);
     }
   };
 

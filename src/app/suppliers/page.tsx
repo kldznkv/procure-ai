@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 // import { useUser } from '@clerk/nextjs'; // DISABLED FOR DEPLOYMENT
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
+import { safeApiCall, handleApiError } from '@/lib/api-utils';
 
 interface Supplier {
   id: string;
@@ -32,15 +33,18 @@ export default function SuppliersPage() {
 
   const loadSuppliers = useCallback(async () => {
     try {
-      const response = await fetch(`/api/suppliers?user_id=${user?.id}`);
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          setSuppliers(result.data || []);
-        }
+      const result = await safeApiCall(
+        `/api/suppliers?user_id=${user?.id}`,
+        { method: 'GET' },
+        { timeout: 5000, maxRetries: 2 }
+      );
+      
+      if (result.success) {
+        setSuppliers(result.data || []);
       }
     } catch (error) {
       console.error('Failed to load suppliers:', error);
+      setSuppliers([]); // Set empty array to prevent UI errors
     } finally {
       setIsLoading(false);
     }
