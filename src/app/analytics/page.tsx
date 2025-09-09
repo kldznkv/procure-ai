@@ -4,6 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 interface Supplier {
   id: string;
   name: string;

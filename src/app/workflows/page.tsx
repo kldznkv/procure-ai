@@ -4,6 +4,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import UnifiedNavigation from '../../components/UnifiedNavigation';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 interface WorkflowItem {
   id?: string;
   type?: string;

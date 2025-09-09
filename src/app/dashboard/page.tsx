@@ -8,6 +8,9 @@ import PriceComparisonChart from '../../components/PriceComparisonChart';
 import CostTrendsChart from '../../components/CostTrendsChart';
 import SpendingAnalysisChart from '../../components/SpendingAnalysisChart';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 interface Document {
   id: string;
   filename: string;
