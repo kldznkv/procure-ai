@@ -81,7 +81,6 @@ export default function SupplierDetailPage() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn && user && supplierId) {
-      console.log('🔄 Loading supplier data for user:', user.id, 'supplier:', supplierId);
       loadSupplierData();
     }
   }, [isLoaded, isSignedIn, user, supplierId, loadSupplierData]);

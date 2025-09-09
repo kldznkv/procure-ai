@@ -21,17 +21,6 @@ export default function SuppliersPage() {
   const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
 
-  // Debug logging for Railway troubleshooting
-  useEffect(() => {
-    console.log('🔐 Suppliers Page Debug:', {
-      isLoaded,
-      isSignedIn,
-      hasUser: !!user,
-      userId: user?.id,
-      environment: process.env.NODE_ENV,
-      platform: 'client'
-    });
-  }, [isLoaded, isSignedIn, user]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,7 +48,6 @@ export default function SuppliersPage() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn && user) {
-      console.log('🔄 Loading suppliers for user:', user.id);
       loadSuppliers();
     }
   }, [isLoaded, isSignedIn, user, loadSuppliers]);
