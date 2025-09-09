@@ -32,7 +32,8 @@ export default function DocumentsPage() {
   const isLoaded = true; // TEMPORARY FIX
   const router = useRouter();
   const [documents, setDocuments] = useState<ProcurementDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -40,6 +41,9 @@ export default function DocumentsPage() {
   const loadDocuments = useCallback(async () => {
     if (!user?.id) return;
     
+    if (isLoading || hasLoaded) return; // PREVENT DUPLICATE CALLS
+    
+    setIsLoading(true);
     try {
       const result = await safeApiCall(
         `/api/documents?user_id=${user.id}&processed=true`,
@@ -49,6 +53,7 @@ export default function DocumentsPage() {
       
       if (result.success) {
         setDocuments(result.data || []);
+        setHasLoaded(true);
       }
     } catch (error) {
       console.error('Failed to load documents:', error);
@@ -56,13 +61,11 @@ export default function DocumentsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [isLoading, hasLoaded, user?.id]);
 
   useEffect(() => {
-    if (isSignedIn && user) {
-      loadDocuments();
-    }
-  }, [isSignedIn, user, loadDocuments]);
+    loadDocuments();
+  }, []); // Empty array - run once only
 
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||

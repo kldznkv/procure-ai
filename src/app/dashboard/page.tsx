@@ -74,17 +74,18 @@ export default function DashboardPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const MAX_RETRIES = 2;
+  const [hasLoaded, setHasLoaded] = useState(false);
 
-  // Load data on component mount
+  // Load data on component mount - EMPTY DEPENDENCY ARRAY
   useEffect(() => {
-    if (isSignedIn && user) {
-      loadData();
-    }
-  }, [isSignedIn, user]);
+    loadData();
+  }, []); // Empty array - run once only
 
   // Load dashboard data
   const loadData = useCallback(async () => {
     if (!user?.id) return;
+    
+    if (isLoading || hasLoaded) return; // PREVENT DUPLICATE CALLS
 
     if (retryCount >= MAX_RETRIES) {
       console.log("Max retries reached, stopping requests");
@@ -113,6 +114,7 @@ export default function DashboardPage() {
 
         // Load analysis data
         await loadAnalysisData();
+        setHasLoaded(true);
       }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
@@ -121,7 +123,7 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, retryCount]);
+  }, [isLoading, hasLoaded, user?.id, retryCount]);
 
   // Load analysis data with timeout and retry limits
   const loadAnalysisData = async () => {

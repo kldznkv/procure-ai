@@ -27,11 +27,15 @@ export default function SuppliersPage() {
   const router = useRouter();
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
 
   const loadSuppliers = useCallback(async () => {
+    if (isLoading || hasLoaded) return; // PREVENT DUPLICATE CALLS
+    
+    setIsLoading(true);
     try {
       const result = await safeApiCall(
         `/api/suppliers?user_id=${user?.id}`,
@@ -41,6 +45,7 @@ export default function SuppliersPage() {
       
       if (result.success) {
         setSuppliers(result.data || []);
+        setHasLoaded(true);
       }
     } catch (error) {
       console.error('Failed to load suppliers:', error);
@@ -48,17 +53,15 @@ export default function SuppliersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [isLoading, hasLoaded, user?.id]);
 
   const navigateToSupplier = useCallback((supplierId: string) => {
     router.push(`/suppliers/${supplierId}`);
   }, [router]);
 
   useEffect(() => {
-    if (isLoaded && isSignedIn && user) {
-      loadSuppliers();
-    }
-  }, [isLoaded, isSignedIn, user, loadSuppliers]);
+    loadSuppliers();
+  }, []); // Empty array - run once only
 
   const filteredSuppliers = suppliers.filter(supplier => {
     const matchesSearch = supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

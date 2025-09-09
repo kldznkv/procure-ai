@@ -50,7 +50,8 @@ export default function SupplierDetailPage() {
   
   const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [documents, setDocuments] = useState<SupplierDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<Partial<Supplier>>({});
   const [selectedDocument, setSelectedDocument] = useState<SupplierDocument | null>(null);
@@ -58,6 +59,9 @@ export default function SupplierDetailPage() {
   const [documentAction, setDocumentAction] = useState<'view' | 'edit' | 'approve' | 'reject' | null>(null);
 
   const loadSupplierData = useCallback(async () => {
+    if (isLoading || hasLoaded) return; // PREVENT DUPLICATE CALLS
+    
+    setIsLoading(true);
     try {
       // Load supplier details with safe API call
       const supplierResult = await safeApiCall(
@@ -80,6 +84,7 @@ export default function SupplierDetailPage() {
       
       if (documentsResult.success) {
         setDocuments(documentsResult.data || []);
+        setHasLoaded(true);
       }
     } catch (error) {
       console.error('Failed to load supplier data:', error);
@@ -88,13 +93,11 @@ export default function SupplierDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [supplierId, user?.id]);
+  }, [isLoading, hasLoaded, supplierId, user?.id]);
 
   useEffect(() => {
-    if (isLoaded && isSignedIn && user && supplierId) {
-      loadSupplierData();
-    }
-  }, [isLoaded, isSignedIn, user, supplierId, loadSupplierData]);
+    loadSupplierData();
+  }, []); // Empty array - run once only
 
   const handleSave = async () => {
     try {
