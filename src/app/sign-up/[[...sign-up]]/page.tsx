@@ -1,4 +1,9 @@
+'use client';
+
 import { SignUp } from '@clerk/nextjs';
+
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
 
 export default function SignUpPage() {
   return (
