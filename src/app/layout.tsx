@@ -3,6 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs';
 import ClerkErrorBoundary from '@/components/ClerkErrorBoundary';
 import NetworkDebugger from '@/components/NetworkDebugger';
+import ClerkAPIDebugger from '@/components/ClerkAPIDebugger';
+import ClerkSDKDebugger from '@/components/ClerkSDKDebugger';
+import EnvironmentDebugger from '@/components/EnvironmentDebugger';
+import ClerkEndpointDebugger from '@/components/ClerkEndpointDebugger';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -91,6 +95,10 @@ export default function RootLayout({
           </div>
         )}
         <NetworkDebugger />
+        <ClerkAPIDebugger />
+        <ClerkSDKDebugger />
+        <EnvironmentDebugger />
+        <ClerkEndpointDebugger />
       </body>
     </html>
   );
