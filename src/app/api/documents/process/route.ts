@@ -2,11 +2,19 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { documentId } = await request.json();
+    console.log('Document processing POST called');
+    
+    const body = await request.json();
+    console.log('Processing request body:', body);
+    
+    const { documentId } = body;
     
     if (!documentId) {
+      console.log('No document ID provided');
       return NextResponse.json({ error: 'Document ID required' }, { status: 400 });
     }
+    
+    console.log('Processing document:', documentId);
     
     // Simulate processing with mock AI analysis
     const analysis = {
@@ -19,6 +27,8 @@ export async function POST(request: Request) {
       processed_at: new Date().toISOString()
     };
 
+    console.log('Analysis completed:', analysis);
+    
     return NextResponse.json({ 
       success: true, 
       analysis,
@@ -26,6 +36,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Document processing error:', error);
-    return NextResponse.json({ error: 'Processing failed' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Processing failed', details: error instanceof Error ? error.message : String(error) }, 
+      { status: 500 }
+    );
   }
 }
