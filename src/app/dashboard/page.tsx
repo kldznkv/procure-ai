@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '../../components/UnifiedNavigation';
 import PriceComparisonChart from '../../components/PriceComparisonChart';
@@ -43,13 +42,8 @@ interface DashboardMetrics {
 }
 
 export default function DashboardPage() {
-  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-  // const { user, isSignedIn } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
-  
-  // Mock user data for testing
-  const user = { id: 'test-user-id' };
-  const isSignedIn = true;
   const [documents, setDocuments] = useState<Document[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);

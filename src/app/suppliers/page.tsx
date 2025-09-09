@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 
@@ -19,11 +18,20 @@ interface Supplier {
 }
 
 export default function SuppliersPage() {
-  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-  // const { user, isSignedIn } = useUser();
-  const user = { id: 'test-user-id' };
-  const isSignedIn = true;
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
+
+  // Debug logging for Railway troubleshooting
+  useEffect(() => {
+    console.log('🔐 Suppliers Page Debug:', {
+      isLoaded,
+      isSignedIn,
+      hasUser: !!user,
+      userId: user?.id,
+      environment: process.env.NODE_ENV,
+      platform: 'client'
+    });
+  }, [isLoaded, isSignedIn, user]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,10 +58,11 @@ export default function SuppliersPage() {
   }, [router]);
 
   useEffect(() => {
-    if (isSignedIn && user) {
+    if (isLoaded && isSignedIn && user) {
+      console.log('🔄 Loading suppliers for user:', user.id);
       loadSuppliers();
     }
-  }, [isSignedIn, user, loadSuppliers]);
+  }, [isLoaded, isSignedIn, user, loadSuppliers]);
 
   const filteredSuppliers = suppliers.filter(supplier => {
     const matchesSearch = supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,6 +70,19 @@ export default function SuppliersPage() {
     const matchesStatus = !statusFilter || supplier.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
+
+  // Show loading state while Clerk is initializing
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-700 text-lg">Loading ProcureAI...</p>
+          <p className="mt-2 text-gray-500 text-sm">Initializing authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isSignedIn) {
     return (

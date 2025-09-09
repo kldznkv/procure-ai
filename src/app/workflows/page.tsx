@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import UnifiedNavigation from '../../components/UnifiedNavigation';
 
 interface WorkflowItem {
@@ -43,10 +42,7 @@ interface AllWorkflows {
 }
 
 export default function WorkflowsPage() {
-  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-  // const { user, isSignedIn } = useUser();
-  const user = { id: 'test-user-id' };
-  const isSignedIn = true;
+  const { user, isSignedIn, isLoaded } = useUser();
   const [workflows, setWorkflows] = useState<AllWorkflows | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedType, setSelectedType] = useState<string>('all');

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 
 interface Supplier {
@@ -47,10 +46,7 @@ interface SupplierAnalytics {
 }
 
 export default function AnalyticsPage() {
-  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-  // const { user, isSignedIn } = useUser();
-  const user = { id: 'test-user-id' };
-  const isSignedIn = true;
+  const { user, isSignedIn, isLoaded } = useUser();
   
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [documents, setDocuments] = useState<SupplierDocument[]>([]);

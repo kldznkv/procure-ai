@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 
@@ -23,10 +22,7 @@ interface ProcurementDocument {
 }
 
 export default function DocumentsPage() {
-  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-  // const { user, isSignedIn } = useUser();
-  const user = { id: 'test-user-id' };
-  const isSignedIn = true;
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   const [documents, setDocuments] = useState<ProcurementDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);

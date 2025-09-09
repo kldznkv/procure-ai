@@ -1,36 +1,62 @@
 'use client';
 
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-// Client-side wrapper component to handle Clerk functionality
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// function ClerkWrapper({ children }: { children: React.ReactNode }) {
-//   const { user, isSignedIn } = useUser();
-//   const router = useRouter();
+// Client-side wrapper component to handle Clerk functionality with debugging
+function ClerkWrapper({ children }: { children: React.ReactNode }) {
+  const { user, isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
 
-//   // Redirect to dashboard if user is signed in
-//   useEffect(() => {
-//     if (isSignedIn && user) {
-//       router.push('/dashboard');
-//     }
-//   }, [isSignedIn, user, router]);
+  // Debug logging for Railway troubleshooting
+  useEffect(() => {
+    console.log('🔐 ClerkWrapper Debug:', {
+      isLoaded,
+      isSignedIn,
+      hasUser: !!user,
+      userId: user?.id,
+      userEmail: user?.emailAddresses?.[0]?.emailAddress,
+      environment: process.env.NODE_ENV,
+      platform: 'client'
+    });
+  }, [isLoaded, isSignedIn, user]);
 
-//   if (isSignedIn && user) {
-//     return (
-//       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-//           <p className="mt-4 text-gray-700 text-lg">Redirecting to dashboard...</p>
-//         </div>
-//       </div>
-//     );
-//   }
+  // Redirect to dashboard if user is signed in
+  useEffect(() => {
+    if (isSignedIn && user) {
+      console.log('🔄 Redirecting to dashboard...', { userId: user.id });
+      router.push('/dashboard');
+    }
+  }, [isSignedIn, user, router]);
 
-//   return <>{children}</>;
-// }
+  // Show loading state while Clerk is initializing
+  if (!isLoaded) {
+    console.log('⏳ Clerk is loading...');
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-700 text-lg">Loading ProcureAI...</p>
+          <p className="mt-2 text-gray-500 text-sm">Initializing authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isSignedIn && user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-700 text-lg">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
 
 export default function HomePage() {
   // Set page title using useEffect to avoid hydration issues
@@ -41,8 +67,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    // TEMPORARILY DISABLED CLERK WRAPPER FOR RAILWAY DEBUGGING
-    // <ClerkWrapper>
+    <ClerkWrapper>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
@@ -116,6 +141,6 @@ export default function HomePage() {
           </div>
         </main>
       </div>
-    // </ClerkWrapper>
+    </ClerkWrapper>
   );
 }

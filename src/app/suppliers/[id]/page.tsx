@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-// import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { useParams } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 
@@ -40,10 +39,7 @@ interface SupplierDocument {
 }
 
 export default function SupplierDetailPage() {
-  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
-  // const { user, isSignedIn } = useUser();
-  const user = { id: 'test-user-id' };
-  const isSignedIn = true;
+  const { user, isSignedIn, isLoaded } = useUser();
   const params = useParams();
   const supplierId = params.id as string;
   
@@ -84,10 +80,11 @@ export default function SupplierDetailPage() {
   }, [supplierId, user?.id]);
 
   useEffect(() => {
-    if (isSignedIn && user && supplierId) {
+    if (isLoaded && isSignedIn && user && supplierId) {
+      console.log('🔄 Loading supplier data for user:', user.id, 'supplier:', supplierId);
       loadSupplierData();
     }
-  }, [isSignedIn, user, supplierId, loadSupplierData]);
+  }, [isLoaded, isSignedIn, user, supplierId, loadSupplierData]);
 
   const handleSave = async () => {
     try {
@@ -157,6 +154,19 @@ export default function SupplierDetailPage() {
       }
     }
   };
+
+  // Show loading state while Clerk is initializing
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-700 text-lg">Loading ProcureAI...</p>
+          <p className="mt-2 text-gray-500 text-sm">Initializing authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isSignedIn) {
     return (
