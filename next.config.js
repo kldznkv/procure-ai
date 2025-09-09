@@ -66,6 +66,8 @@ const nextConfig = {
     reactCompiler: false,
     // Improve build stability
     webpackBuildWorker: true,
+    // Force dynamic rendering to break Clerk infinite loop
+    forceSwcTransforms: true,
   },
 
   // Webpack configuration
@@ -127,6 +129,7 @@ const nextConfig = {
     // Railway sets PORT automatically
     port: process.env.PORT || 3000,
   },
+
 
 
   // Redirects

@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 
+// Force dynamic rendering to prevent Clerk static generation issues
+export const dynamic = 'force-dynamic';
+
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
