@@ -8,6 +8,7 @@ import PriceComparisonChart from '../../components/PriceComparisonChart';
 import CostTrendsChart from '../../components/CostTrendsChart';
 import SpendingAnalysisChart from '../../components/SpendingAnalysisChart';
 import { safeApiCall, createApiResponse, handleApiError } from '../../lib/api-utils';
+import ProcurementUpload from '../../components/ProcurementUpload';
 
 // Force dynamic rendering to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -424,40 +425,14 @@ export default function DashboardPage() {
 
         {/* Document Upload Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Upload New Document</h2>
-            <div className="flex items-center space-x-2">
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.bmp,.tiff"
-                onChange={handleFileUpload}
-                disabled={isUploading}
-                className="hidden"
-                id="file-upload"
-              />
-              <label
-                htmlFor="file-upload"
-                className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors font-medium ${
-                  isUploading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {isUploading ? 'Uploading...' : '📤 Choose File'}
-              </label>
-            </div>
-          </div>
-          
-          {isUploading && (
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${uploadProgress}%` }}
-              ></div>
-            </div>
-          )}
-          
-          <p className="text-sm text-gray-600 mt-2">
-            Supported formats: PDF, DOC, DOCX, TXT. Documents will be automatically analyzed using AI.
-          </p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload New Document</h2>
+          <ProcurementUpload 
+            onUploadComplete={(document) => {
+              console.log('Document uploaded:', document);
+              // Refresh the dashboard data
+              loadData();
+            }}
+          />
         </div>
 
         {/* Key Metrics Cards */}

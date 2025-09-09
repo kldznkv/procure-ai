@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import UnifiedNavigation from '@/components/UnifiedNavigation';
 import { safeApiCall, handleApiError } from '@/lib/api-utils';
+import ProcurementUpload from '@/components/ProcurementUpload';
 
 // Force dynamic rendering to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -196,12 +197,15 @@ export default function DocumentsPage() {
             <p className="text-gray-600 text-base mt-2">
               {searchTerm || typeFilter || statusFilter ? 'Try adjusting your search or filters' : 'Upload your first document to get started'}
             </p>
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              Upload Document
-            </button>
+            <div className="mt-4">
+              <ProcurementUpload 
+                onUploadComplete={(document) => {
+                  console.log('Document uploaded:', document);
+                  // Refresh the documents list
+                  loadDocuments();
+                }}
+              />
+            </div>
           </div>
         ) : (
           <div className="space-y-4">

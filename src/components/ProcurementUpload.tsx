@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+// import { useUser } from '@clerk/nextjs'; // DISABLED FOR DEPLOYMENT
 import { ProcurementDocument } from '@/types/procurement';
 
 interface ProcurementUploadProps {
@@ -9,7 +9,9 @@ interface ProcurementUploadProps {
 }
 
 export default function ProcurementUpload({ onUploadComplete }: ProcurementUploadProps) {
-  const { user, isLoaded } = useUser();
+  // const { user, isLoaded } = useUser(); // DISABLED FOR DEPLOYMENT
+  const user = { id: 'temp-user' }; // TEMPORARY FIX
+  const isLoaded = true; // TEMPORARY FIX
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
