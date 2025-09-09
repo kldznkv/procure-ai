@@ -2,7 +2,7 @@
 
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // Client-side wrapper component to handle Clerk functionality
 function ClerkWrapper({ children }: { children: React.ReactNode }) {
@@ -31,10 +31,12 @@ function ClerkWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
-  // Set page title
-  if (typeof window !== 'undefined') {
-    document.title = 'ProcureAI - AI-Powered Procurement Platform';
-  }
+  // Set page title using useEffect to avoid hydration issues
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.title = 'ProcureAI - AI-Powered Procurement Platform';
+    }
+  }, []);
 
   return (
     <ClerkWrapper>

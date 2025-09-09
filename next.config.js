@@ -62,10 +62,37 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['@anthropic-ai/sdk', '@supabase/supabase-js'],
+    // Fix React 19 compatibility issues
+    reactCompiler: false,
+    // Improve build stability
+    webpackBuildWorker: true,
   },
 
   // Webpack configuration
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
+    // Fix webpack chunk generation issues
+    if (!isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: {
+              minChunks: 1,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: -10,
+              chunks: 'all',
+            },
+          },
+        },
+      };
+    }
+
     // Optimize for production
     if (!isServer) {
       config.resolve.fallback = {
@@ -75,6 +102,18 @@ const nextConfig = {
         tls: false,
       };
     }
+
+    // Fix chunk loading issues
+    if (!dev && !isServer) {
+      config.output.chunkLoadingGlobal = 'webpackChunkprocure_ai';
+    }
+
+    // Fix self is not defined error
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'self': false,
+    };
+
     return config;
   },
 
