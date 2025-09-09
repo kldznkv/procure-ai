@@ -1,34 +1,36 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+// import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 // Client-side wrapper component to handle Clerk functionality
-function ClerkWrapper({ children }: { children: React.ReactNode }) {
-  const { user, isSignedIn } = useUser();
-  const router = useRouter();
+// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+// function ClerkWrapper({ children }: { children: React.ReactNode }) {
+//   const { user, isSignedIn } = useUser();
+//   const router = useRouter();
 
-  // Redirect to dashboard if user is signed in
-  useEffect(() => {
-    if (isSignedIn && user) {
-      router.push('/dashboard');
-    }
-  }, [isSignedIn, user, router]);
+//   // Redirect to dashboard if user is signed in
+//   useEffect(() => {
+//     if (isSignedIn && user) {
+//       router.push('/dashboard');
+//     }
+//   }, [isSignedIn, user, router]);
 
-  if (isSignedIn && user) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-700 text-lg">Redirecting to dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+//   if (isSignedIn && user) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+//         <div className="text-center">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+//           <p className="mt-4 text-gray-700 text-lg">Redirecting to dashboard...</p>
+//         </div>
+//       </div>
+//     );
+//   }
 
-  return <>{children}</>;
-}
+//   return <>{children}</>;
+// }
 
 export default function HomePage() {
   // Set page title using useEffect to avoid hydration issues
@@ -39,7 +41,8 @@ export default function HomePage() {
   }, []);
 
   return (
-    <ClerkWrapper>
+    // TEMPORARILY DISABLED CLERK WRAPPER FOR RAILWAY DEBUGGING
+    // <ClerkWrapper>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
@@ -113,6 +116,6 @@ export default function HomePage() {
           </div>
         </main>
       </div>
-    </ClerkWrapper>
+    // </ClerkWrapper>
   );
 }

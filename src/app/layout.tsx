@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from '@clerk/nextjs';
+// import { ClerkProvider } from '@clerk/nextjs'; // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,24 +19,26 @@ export const metadata: Metadata = {
 };
 
 // Get the Clerk publishable key with proper fallback
-function getClerkPublishableKey(): string | undefined {
-  const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-  
-  // During static generation, if the key is not available, return undefined
-  // This will prevent the ClerkProvider from throwing an error
-  if (!key || key === 'your_clerk_publishable_key' || key.trim() === '') {
-    return undefined;
-  }
-  
-  return key;
-}
+// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+// function getClerkPublishableKey(): string | undefined {
+//   const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+//   
+//   // During static generation, if the key is not available, return undefined
+//   // This will prevent the ClerkProvider from throwing an error
+//   if (!key || key === 'your_clerk_publishable_key' || key.trim() === '') {
+//     return undefined;
+//   }
+//   
+//   return key;
+// }
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const clerkPublishableKey = getClerkPublishableKey();
+  // TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+  // const clerkPublishableKey = getClerkPublishableKey();
 
   return (
     <html lang="en">
@@ -46,7 +48,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {clerkPublishableKey ? (
+        {/* TEMPORARILY DISABLED CLERK FOR RAILWAY DEBUGGING */}
+        {/* {clerkPublishableKey ? (
           <ClerkProvider 
             publishableKey={clerkPublishableKey}
             signInUrl="/sign-in"
@@ -71,7 +74,10 @@ export default function RootLayout({
               <p className="mt-2 text-gray-500 text-sm">Setting up authentication...</p>
             </div>
           </div>
-        )}
+        )} */}
+        
+        {/* TEMPORARY: Direct render without Clerk for Railway debugging */}
+        {children}
       </body>
     </html>
   );

@@ -2,7 +2,8 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { UserButton } from '@clerk/nextjs';
+// TEMPORARILY DISABLED FOR RAILWAY DEBUGGING
+// import { UserButton } from '@clerk/nextjs';
 
 interface UnifiedNavigationProps {
   showBackButton?: boolean;
@@ -48,7 +49,9 @@ export default function UnifiedNavigation({
                 </span>
               </div>
             </div>
-            <UserButton />
+            {/* TEMPORARILY DISABLED FOR RAILWAY DEBUGGING */}
+            {/* <UserButton /> */}
+            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
           </div>
         </div>
       </header>
