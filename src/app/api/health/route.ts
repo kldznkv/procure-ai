@@ -1,8 +1,5 @@
 export async function GET() {
-  return Response.json({ 
-    status: "OK", 
-    timestamp: new Date().toISOString(),
-    message: "Railway server is running"
+  return new Response(JSON.stringify({ status: "ok", data: [] }), {
+    headers: { 'Content-Type': 'application/json' }
   })
 }
-

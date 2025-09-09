@@ -1,14 +1,11 @@
 export async function GET() {
-  return Response.json({ 
-    documents: [],
-    total: 0,
-    message: "API working - mock data"
+  return new Response(JSON.stringify({ status: "ok", data: [] }), {
+    headers: { 'Content-Type': 'application/json' }
   })
 }
 
 export async function POST() {
-  return Response.json({ 
-    success: true,
-    message: "API working - mock upload"
+  return new Response(JSON.stringify({ status: "ok", data: [] }), {
+    headers: { 'Content-Type': 'application/json' }
   })
 }

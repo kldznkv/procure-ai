@@ -1,14 +1,11 @@
 export async function GET() {
-  return Response.json({ 
-    success: true,
-    data: { id: '1', name: 'Sample Supplier' },
-    message: "API working - mock data"
+  return new Response(JSON.stringify({ status: "ok", data: [] }), {
+    headers: { 'Content-Type': 'application/json' }
   })
 }
 
 export async function PUT() {
-  return Response.json({ 
-    success: true,
-    message: "API working - mock supplier updated"
+  return new Response(JSON.stringify({ status: "ok", data: [] }), {
+    headers: { 'Content-Type': 'application/json' }
   })
 }

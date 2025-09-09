@@ -72,6 +72,8 @@ export default function DashboardPage() {
               const [patternsData, setPatternsData] = useState<Record<string, unknown> | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 2;
 
   // Load data on component mount
   useEffect(() => {
@@ -83,6 +85,12 @@ export default function DashboardPage() {
   // Load dashboard data
   const loadData = useCallback(async () => {
     if (!user?.id) return;
+
+    if (retryCount >= MAX_RETRIES) {
+      console.log("Max retries reached, stopping requests");
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -108,10 +116,12 @@ export default function DashboardPage() {
       }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
+      setRetryCount(prev => prev + 1);
+      console.error("Load failed, retry count:", retryCount);
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, retryCount]);
 
   // Load analysis data with timeout and retry limits
   const loadAnalysisData = async () => {
